@@ -1,6 +1,8 @@
 #include "VulkanBaseApplication.h"
 
 
+#include <GLFW/glfw3.h>
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 
@@ -28,7 +30,8 @@ VkResult CreateDebugReportCallbackEXT(VkInstance instance, const VkDebugReportCa
 	auto func = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
 	if (func != nullptr) {
 		return func(instance, pCreateInfo, pAllocator, pCallback);
-	} else {
+	}
+	else {
 		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 }
@@ -249,7 +252,7 @@ void VulkanBaseApplication::updateUniformBuffer() {
 	// copy data to buffer memory
 	bufferSize = ubo.vsSceneStaging.allocSize;
 	vkMapMemory(device, ubo.vsSceneStaging.memory, 0, bufferSize, 0, &data);
-		memcpy(data, &vsParams, bufferSize);
+	memcpy(data, &vsParams, bufferSize);
 	vkUnmapMemory(device, ubo.vsSceneStaging.memory);
 
 	copyBuffer(ubo.vsSceneStaging.buffer, ubo.vsScene.buffer, bufferSize);
@@ -264,7 +267,7 @@ void VulkanBaseApplication::updateUniformBuffer() {
 
 	bufferSize = ubo.csParamsStaging.allocSize;
 	vkMapMemory(device, ubo.csParamsStaging.memory, 0, bufferSize, 0, &data);
-		memcpy(data, &csParams, bufferSize);
+	memcpy(data, &csParams, bufferSize);
 	vkUnmapMemory(device, ubo.csParamsStaging.memory);
 
 	copyBuffer(ubo.csParamsStaging.buffer, ubo.csParams.buffer, bufferSize);
@@ -278,7 +281,7 @@ void VulkanBaseApplication::updateUniformBuffer() {
 
 	bufferSize = ubo.fsParamsStaging.allocSize;
 	vkMapMemory(device, ubo.fsParamsStaging.memory, 0, bufferSize, 0, &data);
-		memcpy(data, &fsParams, bufferSize);
+	memcpy(data, &fsParams, bufferSize);
 	vkUnmapMemory(device, ubo.fsParamsStaging.memory);
 
 	copyBuffer(ubo.fsParamsStaging.buffer, ubo.fsParams.buffer, bufferSize);
@@ -299,7 +302,7 @@ void VulkanBaseApplication::drawFrame() {
 		fenceCreateInfo.pNext = nullptr;
 
 		if (vkCreateFence(device, &fenceCreateInfo, nullptr, fence.replace())
-	 			!= VK_SUCCESS) {
+			!= VK_SUCCESS) {
 			throw std::runtime_error("failed to create fence");
 		}
 
@@ -447,7 +450,8 @@ void VulkanBaseApplication::createInstance() {
 	if (enableValidationLayers) {
 		createInfo.enabledLayerCount = uint32_t(validationLayers.size());
 		createInfo.ppEnabledLayerNames = validationLayers.data();
-	} else {
+	}
+	else {
 		createInfo.enabledLayerCount = 0;
 	}
 
@@ -533,7 +537,8 @@ void VulkanBaseApplication::createLogicalDevice() {
 	if (enableValidationLayers) {
 		createInfo.enabledLayerCount = uint32_t(validationLayers.size());
 		createInfo.ppEnabledLayerNames = validationLayers.data();
-	} else {
+	}
+	else {
 		createInfo.enabledLayerCount = 0;
 	}
 
@@ -575,7 +580,8 @@ void VulkanBaseApplication::createSwapChain() {
 		createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 		createInfo.queueFamilyIndexCount = 2;
 		createInfo.pQueueFamilyIndices = queueFamilyIndices;
-	} else {
+	}
+	else {
 		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		//createInfo.queueFamilyIndexCount = 0; // Optional
 		//createInfo.pQueueFamilyIndices = nullptr; // Optional
@@ -622,7 +628,7 @@ void VulkanBaseApplication::createShaders() {
 void VulkanBaseApplication::createGraphicsPipeline()
 {
 #pragma region Vertex and Fragment Shader Stages
-	VkPipelineShaderStageCreateInfo shaderStages[] = {shaderStage.vs, shaderStage.fs};
+	VkPipelineShaderStageCreateInfo shaderStages[] = { shaderStage.vs, shaderStage.fs };
 #pragma endregion
 
 
@@ -820,7 +826,7 @@ void VulkanBaseApplication::createGraphicsPipeline()
 	pipelineInfo.stageCount = 1;
 	shaderStages[0] = shaderStage.vs;
 	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipelines.depth)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to create depth pipeline!");
 	}
 }
@@ -835,7 +841,7 @@ void VulkanBaseApplication::createComputePipeline() {
 	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 
 	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr,
-			computePipelineLayout.replace()) != VK_SUCCESS) {
+		computePipelineLayout.replace()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create compute pipeline layout!");
 	}
 
@@ -849,7 +855,7 @@ void VulkanBaseApplication::createComputePipeline() {
 	// compute frustum pipeline
 	pipelineInfo.stage = shaderStage.csFrustum;
 	if (vkCreateComputePipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo,
-			nullptr, &pipelines.computeFrustumGrid) != VK_SUCCESS) {
+		nullptr, &pipelines.computeFrustumGrid) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create compute pipeline!");
 	}
 
@@ -1001,7 +1007,7 @@ void VulkanBaseApplication::createFrustumCommandBuffer() {
 	cmdBufInfo.commandBufferCount = 1;
 
 	if (vkAllocateCommandBuffers(device, &cmdBufInfo,
-			&cmdBuffers.frustum) != VK_SUCCESS) {
+		&cmdBuffers.frustum) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate compute command buffers!");
 	}
 
@@ -1135,7 +1141,7 @@ void VulkanBaseApplication::createDepthCommandBuffer() {
 		cbAllocInfo.commandBufferCount = 1;
 
 		if (vkAllocateCommandBuffers(device, &cbAllocInfo, &depthPrepass.commandBuffer)
-				!= VK_SUCCESS) {
+			!= VK_SUCCESS) {
 			throw std::runtime_error("failed to allocate depth command buffer");
 		}
 	}
@@ -1147,7 +1153,7 @@ void VulkanBaseApplication::createDepthCommandBuffer() {
 		semCreateInfo.flags = NULL;
 
 		if (vkCreateSemaphore(device, &semCreateInfo, nullptr, &depthPrepass.semaphore)
-				!= VK_SUCCESS) {
+			!= VK_SUCCESS) {
 			throw std::runtime_error("failed to allocate depth semaphore!");
 		}
 	}
@@ -1159,7 +1165,7 @@ void VulkanBaseApplication::createDepthCommandBuffer() {
 	cbBeginInfo.pInheritanceInfo = nullptr;
 
 	std::array<VkClearValue, 1> clearVals;
-	clearVals[0].depthStencil = {1.f, 0};
+	clearVals[0].depthStencil = { 1.f, 0 };
 
 	VkRenderPassBeginInfo rpBeginInfo = {};
 	rpBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -1309,7 +1315,7 @@ void VulkanBaseApplication::createDepthRenderPass() {
 	renderPassCreateInfo.pDependencies = dependencies.data();
 
 	if (vkCreateRenderPass(device, &renderPassCreateInfo, nullptr,
-			&depthPrepass.renderPass) != VK_SUCCESS) {
+		&depthPrepass.renderPass) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create depth renderpass!");
 	}
 }
@@ -1335,7 +1341,7 @@ void VulkanBaseApplication::createDepthFramebuffer() {
 	imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
 	if (vkCreateImage(device, &imageCreateInfo, nullptr, &depthPrepass.depth.image)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to create depth framebuffer image!");
 	}
 
@@ -1350,12 +1356,12 @@ void VulkanBaseApplication::createDepthFramebuffer() {
 	memAllocInfo.memoryTypeIndex = findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	if (vkAllocateMemory(device, &memAllocInfo, nullptr, &depthPrepass.depth.mem)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate depth framebuffer image memory!");
 	}
 
 	if (vkBindImageMemory(device, depthPrepass.depth.image, depthPrepass.depth.mem, 0)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to bind depth framebuffer image memory!");
 	}
 
@@ -1373,7 +1379,7 @@ void VulkanBaseApplication::createDepthFramebuffer() {
 	imageViewCreateInfo.subresourceRange.layerCount = 1;
 
 	if (vkCreateImageView(device, &imageViewCreateInfo, nullptr, &depthPrepass.depth.view)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to bind depth framebuffer imageview!");
 	}
 
@@ -1397,7 +1403,7 @@ void VulkanBaseApplication::createDepthFramebuffer() {
 	samplerCreateInfo.unnormalizedCoordinates = VK_FALSE;
 
 	if (vkCreateSampler(device, &samplerCreateInfo, nullptr, &depthPrepass.depthSampler)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to bind depth sampler!");
 	}
 
@@ -1413,7 +1419,7 @@ void VulkanBaseApplication::createDepthFramebuffer() {
 	fbCreateInfo.layers = 1;
 
 	if (vkCreateFramebuffer(device, &fbCreateInfo, nullptr, &depthPrepass.frameBuffer)
-			!= VK_SUCCESS) {
+		!= VK_SUCCESS) {
 		throw std::runtime_error("failed to bind depth framebuffer!");
 	}
 }
@@ -1430,7 +1436,7 @@ void VulkanBaseApplication::createVertexBuffer(std::vector<Vertex> & verticesDat
 
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, verticesData.data(), (size_t)bufferSize);
+	memcpy(data, verticesData.data(), (size_t)bufferSize);
 	vkUnmapMemory(device, stagingBufferMemory);
 
 	createBuffer(bufferSize,
@@ -1459,7 +1465,7 @@ void VulkanBaseApplication::createIndexBuffer(std::vector<uint32_t> &indicesData
 
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, indicesData.data(), (size_t)bufferSize);
+	memcpy(data, indicesData.data(), (size_t)bufferSize);
 	vkUnmapMemory(device, stagingBufferMemory);
 
 	createBuffer(bufferSize,
@@ -1479,7 +1485,7 @@ void VulkanBaseApplication::createSemaphores() {
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
 	if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, imageAvailableSemaphore.replace()) != VK_SUCCESS
-			|| vkCreateSemaphore(device, &semaphoreInfo, nullptr, renderFinishedSemaphore.replace()) != VK_SUCCESS) {
+		|| vkCreateSemaphore(device, &semaphoreInfo, nullptr, renderFinishedSemaphore.replace()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create semaphores!");
 	}
 }
@@ -1874,7 +1880,7 @@ void VulkanBaseApplication::initStorageBuffer() {
 		lightsStaging.buffer, lightsStaging.memory);
 
 	vkMapMemory(device, lightsStaging.memory, 0, bufferSize, 0, &data);
-		memcpy(data, &lights, bufferSize);
+	memcpy(data, &lights, bufferSize);
 	vkUnmapMemory(device, lightsStaging.memory);
 
 	copyBuffer(lightsStaging.buffer, sbo.lights.buffer, bufferSize);
@@ -1888,7 +1894,7 @@ void VulkanBaseApplication::initStorageBuffer() {
 		frustumsStaging.buffer, frustumsStaging.memory);
 
 	vkMapMemory(device, frustumsStaging.memory, 0, bufferSize, 0, &data);
-		memcpy(data, &frustums, bufferSize);
+	memcpy(data, &frustums, bufferSize);
 	vkUnmapMemory(device, frustumsStaging.memory);
 
 	copyBuffer(frustumsStaging.buffer, sbo.frustums.buffer, bufferSize);
@@ -2207,7 +2213,7 @@ void VulkanBaseApplication::createTextureImage(const std::string& texFilename, V
 
 	void* data;
 	vkMapMemory(device, stagingImageMemory, 0, imageSize, 0, &data);
-		memcpy(data, pixels, (size_t)imageSize);
+	memcpy(data, pixels, (size_t)imageSize);
 	vkUnmapMemory(device, stagingImageMemory);
 
 	stbi_image_free(pixels);
@@ -2323,7 +2329,7 @@ void VulkanBaseApplication::transitionImageLayout(VkImage image, VkFormat format
 		0, nullptr,
 		0, nullptr,
 		1, &barrier
-		);
+	);
 
 	endSingleTimeCommands(commandBuffer);
 }
@@ -2352,7 +2358,7 @@ void VulkanBaseApplication::copyImage(VkImage srcImage, VkImage dstImage, uint32
 		srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 		dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		1, &region
-		);
+	);
 
 	endSingleTimeCommands(commandBuffer);
 }
@@ -2437,10 +2443,10 @@ VkFormat VulkanBaseApplication::findSupportedFormat(
 
 VkFormat VulkanBaseApplication::findDepthFormat() {
 	return findSupportedFormat(
-	{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
-		);
+	);
 }
 
 
@@ -2699,7 +2705,7 @@ void VulkanBaseApplication::loadModel(MeshGroup & meshGroup, const std::string &
 	for (int i = 0; i < meshGroup.materialBuffers.size(); ++i) {
 
 		vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, &meshMaterials[i], (size_t)bufferSize);
+		memcpy(data, &meshMaterials[i], (size_t)bufferSize);
 		vkUnmapMemory(device, stagingBufferMemory);
 
 		meshGroup.materialBuffers[i].allocSize = bufferSize;
@@ -2723,7 +2729,7 @@ void VulkanBaseApplication::loadModel(MeshGroup & meshGroup, const std::string &
 			meshGroup.descriptorSets[i], meshGroup.materialBuffers[i],
 			meshGroup.materials[i].useTextureMap, meshGroup.textureMaps[i],
 			meshGroup.materials[i].useNormMap, meshGroup.normalMaps[i],
-			meshGroup.materials[i].useSpecMap, meshGroup.specMaps[i] );
+			meshGroup.materials[i].useSpecMap, meshGroup.specMaps[i]);
 	}
 
 
@@ -2735,7 +2741,7 @@ void VulkanBaseApplication::loadModel(MeshGroup & meshGroup, const std::string &
 		<< "triangles count = " << indices.size() / 3 << std::endl
 		<< "materials count = " << meshGroup.materials.size() << std::endl
 		<< "objects count = " << shapes.size() << std::endl
-		<< "=================================================================================\n" ;
+		<< "=================================================================================\n";
 }
 
 void VulkanBaseApplication::createDescriptorSetsForMeshGroup(VkDescriptorSet & descriptorSet, VulkanBuffer & buffer, int useTex, Texture & texMap, int useNorm, Texture & norMap, int useSpec, Texture & specMap) {
@@ -2796,8 +2802,8 @@ void VulkanBaseApplication::createDescriptorSetsForMeshGroup(VkDescriptorSet & d
 	imageInfo[0].sampler = useTex > 0 ? texMap.sampler : textures[0].sampler; // texture map;
 
 	imageInfo[1].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	imageInfo[1].imageView = useNorm > 0? norMap.imageView : textures[1].imageView; //  normal map;
-	imageInfo[1].sampler = useNorm > 0? norMap.sampler : textures[1].sampler; // normal map;
+	imageInfo[1].imageView = useNorm > 0 ? norMap.imageView : textures[1].imageView; //  normal map;
+	imageInfo[1].sampler = useNorm > 0 ? norMap.sampler : textures[1].sampler; // normal map;
 
 	imageInfo[2].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	imageInfo[2].imageView = useSpec > 0 ? specMap.imageView : textures[1].imageView; //  normal map;
@@ -3044,7 +3050,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 			}
 		}
 	}
-	else if(action == GLFW_RELEASE) {
+	else if (action == GLFW_RELEASE) {
 		if (key >= GLFW_KEY_A && key <= GLFW_KEY_Z) {
 			keyboardMapping[key - GLFW_KEY_A] = false;
 		}
@@ -3054,12 +3060,12 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 }
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-//	//std::cout << xoffset << "," << yoffset << std::endl;
-//	if (cameraPos.length() > FLT_EPSILON) {
-//#if CRYTEC_SPONZA
-//		cameraPos -= (float)yoffset * glm::normalize(cameraPos) * 5.0f;
-//#else
-//		cameraPos -= (float)yoffset * glm::normalize(cameraPos) * 0.05f;
-//#endif
-//	}
+	//	//std::cout << xoffset << "," << yoffset << std::endl;
+	//	if (cameraPos.length() > FLT_EPSILON) {
+	//#if CRYTEC_SPONZA
+	//		cameraPos -= (float)yoffset * glm::normalize(cameraPos) * 5.0f;
+	//#else
+	//		cameraPos -= (float)yoffset * glm::normalize(cameraPos) * 0.05f;
+	//#endif
+	//	}
 }

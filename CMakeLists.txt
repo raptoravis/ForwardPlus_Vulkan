@@ -4,8 +4,9 @@ project (vulkan_forward_plus)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 set(EXTERNAL "lib")
+
 include_directories("${EXTERNAL}/tinyobjloader")
-include_directories("${EXTERNAL}/glfw-3.2.1.bin.WIN64/include")
+include_directories("${EXTERNAL}/glfw/include")
 include_directories("${EXTERNAL}/glm")
 include_directories("${EXTERNAL}/stb")
 include_directories("$ENV{VULKAN_SDK}/Include")
@@ -41,19 +42,24 @@ set(SOURCE_FILES
 # ENDIF(MSVC)
 
 set(LINK_DIRECTORIES
-	"${EXTERNAL}/glfw-3.2.1.bin.WIN64/lib-vc2015/"
+	"${EXTERNAL}/glfw"
 	"$ENV{VULKAN_SDK}/Bin/"
+	"$ENV{VULKAN_SDK}/Lib32/"
 )
 
 link_directories(${LINK_DIRECTORIES})
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
 
+#add_dependencies(${CMAKE_PROJECT_NAME} glfw)
+
+#add_subdirectory("glfw-3.3.2")
+
 set(LINK_LIBRARIES
 	"glfw3"
 	"vulkan-1"
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} ${LINK_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/")
