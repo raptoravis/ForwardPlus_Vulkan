@@ -28,7 +28,8 @@
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
-const bool enableValidationLayers = true;
+//const bool enableValidationLayers = true;
+const bool enableValidationLayers = false;
 #endif
 
 // debug report funcs definitions
@@ -45,14 +46,14 @@ extern const int HEIGHT;
 #define CRYTEC_SPONZA 1
 
 #if SIBENIK
-	const std::string MODEL_BASE_DIR = "../src/models/sibenik/";
-	const std::string MODEL_PATH = MODEL_BASE_DIR + "sibenik.obj";
+const std::string MODEL_BASE_DIR = "../src/models/sibenik/";
+const std::string MODEL_PATH = MODEL_BASE_DIR + "sibenik.obj";
 #elif SPONZA
-	const std::string MODEL_BASE_DIR = "../src/models/sponza/";
-	const std::string MODEL_PATH = MODEL_BASE_DIR + "sponza.obj";
+const std::string MODEL_BASE_DIR = "../src/models/sponza/";
+const std::string MODEL_PATH = MODEL_BASE_DIR + "sponza.obj";
 #elif CRYTEC_SPONZA
-	const std::string MODEL_BASE_DIR = "../src/models/crytek-sponza/";
-	const std::string MODEL_PATH = MODEL_BASE_DIR + "sponza.obj";
+const std::string MODEL_BASE_DIR = "../src/models/crytek-sponza/";
+const std::string MODEL_PATH = MODEL_BASE_DIR + "sponza.obj";
 #endif
 
 const std::string TEXTURE_COLOR_PATH = MODEL_BASE_DIR + "blank.png";
@@ -147,7 +148,7 @@ private:
 
 	VDeleter<VkInstance> instance{ vkDestroyInstance };
 	VDeleter<VkDebugReportCallbackEXT> callback{ instance, DestroyDebugReportCallbackEXT };
-	VDeleter<VkSurfaceKHR> surface{ instance, vkDestroySurfaceKHR};
+	VDeleter<VkSurfaceKHR> surface{ instance, vkDestroySurfaceKHR };
 
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VDeleter<VkDevice> device{ vkDestroyDevice };
@@ -167,7 +168,7 @@ private:
 
 	// Pipeline layout
 	VDeleter<VkPipelineLayout> pipelineLayout{ device, vkDestroyPipelineLayout };
-	VDeleter<VkPipelineLayout> computePipelineLayout = {device, vkDestroyPipelineLayout};
+	VDeleter<VkPipelineLayout> computePipelineLayout = { device, vkDestroyPipelineLayout };
 
 	// Descriptor pool
 	VDeleter<VkDescriptorPool> descriptorPool{ device, vkDestroyDescriptorPool };
@@ -187,7 +188,7 @@ private:
 	VDeleter<VkSemaphore> renderFinishedSemaphore{ device, vkDestroySemaphore };
 
 	// fence
-	VDeleter<VkFence> fence {device, vkDestroyFence};
+	VDeleter<VkFence> fence{ device, vkDestroyFence };
 
 	// shader modules
 	std::vector<VDeleter<VkShaderModule>> shaderModules;
@@ -211,7 +212,7 @@ private:
 
 
 	// Pipeline(s)
-	struct Pipelines{
+	struct Pipelines {
 		VkPipeline graphics; // base pipeline
 		VkPipeline axis; // axis pipeline
 		VkPipeline quad; // quad pipeline
@@ -425,8 +426,8 @@ private:
 	} uboHostData;
 
 	// storage buffer object to store lights
-	#define MAX_NUM_LIGHTS 5000
-	#define MAX_NUM_LIGHTS_PER_TILE 128
+#define MAX_NUM_LIGHTS 5000
+#define MAX_NUM_LIGHTS_PER_TILE 128
 	struct SBO_lights {
 		// light information
 		struct {
@@ -436,7 +437,7 @@ private:
 		} lights[MAX_NUM_LIGHTS];;
 	};
 
-	#define MAX_NUM_FRUSTRUMS 20000
+#define MAX_NUM_FRUSTRUMS 20000
 	struct SBO_frustums {
 		// frustum definition
 		struct {
